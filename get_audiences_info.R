@@ -289,15 +289,25 @@ try({
   
   
   try({
+    # Retrieve existing data for the current day
+    current_date <- lubridate::today()
+    existing_page_ids <- old_info %>%
+      filter(lubridate::as_date(tstamp) == current_date) %>%
+      pull(page_id)
     
-    ### save seperately
-    benny <- all_dat %>%
-      arrange(page_id) %>%
-      # sample_n(5) %>%
-      split(1:nrow(.)) %>%
-      map_progress(scraper)
+    # Filter out page IDs that are already present for the current day
+    pages_to_retrieve <- all_dat %>%
+      filter(!page_id %in% existing_page_ids)
     
-    
+    if (nrow(pages_to_retrieve) == 0) {
+      message("No new pages to retrieve for the current day.")
+    } else {
+      # Use only the filtered pages for scraping
+      benny <- pages_to_retrieve %>%
+        arrange(page_id) %>%
+        split(1:nrow(.)) %>%
+        map_progress(scraper)
+    }
   })
   # saveRDS(election_dat, paste0("data/election_dat", tf, ".rds"))
   
