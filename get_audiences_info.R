@@ -329,6 +329,12 @@ try({
   # glimpse(old_info)
   infodat <- benny %>% map_dfr(~pluck(.x, "page_info")) %>% as_tibble()
   
+  try({
+    old_info <- arrow::read_parquet(glue::glue("https://github.com/favstats/meta_ad_targeting/releases/download/PageInfo/{sets$cntry}-page_info.parquet"))
+  })
+  if(!exists("old_info")){
+    old_info <- tibble()
+  }
   
   try({
     infodat <- infodat %>% 
