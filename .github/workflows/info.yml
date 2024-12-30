@@ -4,7 +4,8 @@ on:
     - cron: '0 1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * *'
   push:
     branches:
-      - main
+      - master
+      - main      
       
 jobs:
   update-meta-info:
@@ -14,7 +15,6 @@ jobs:
       contents: write
     env:
       GITHUB_PAT: ${{ secrets.GH_PAT }}
-      ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
       TELEGRAM_BOT_ID: ${{ secrets.TELEGRAM_BOT_ID }}
       TELEGRAM_GROUP_ID: ${{ secrets.TELEGRAM_GROUP_ID }}
     steps:
@@ -62,4 +62,4 @@ jobs:
             any::httr2
             any::openssl
       - name: "Script - Meta Run"
-        run: Rscript 'get_audiences_info.R'"
+        run: Rscript 'get_audiences_info.R'
